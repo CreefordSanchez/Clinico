@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Clinico.DAL\Clinico.DAL.csproj" />
+    <ProjectReference Include="..\Clinico.Model\Clinico.Model.csproj" />
+  </ItemGroup>
+
 </Project>

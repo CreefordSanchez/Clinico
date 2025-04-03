@@ -12,18 +12,21 @@ namespace Clinico.DAL {
             _context.SaveChanges();
         }
 
-        public void RemoveDoctor(Doctor doctor) {
+        public void RemoveDoctor(int id) {
+            Doctor doctor = GetDoctor(id);
             _context.Remove(doctor);
             _context.SaveChanges();
         }
 
         public void UpdateDoctor(Doctor doctor) {
-            _context.Update(doctor);
-            _context.SaveChanges();
-        }
+            Doctor Newdoctor = GetDoctor(doctor.Id);
+            Newdoctor.Name = doctor.Name;
+            Newdoctor.Email = doctor.Email;
+            Newdoctor.Address = doctor.Address;
+            Newdoctor.PhoneNumber = doctor.PhoneNumber;
+            Newdoctor.Specialty = doctor.Specialty;
 
-        public void DeleteDoctor(Doctor doctor) {
-            _context.Remove(doctor);
+            _context.Update(Newdoctor);
             _context.SaveChanges();
         }
 

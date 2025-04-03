@@ -12,8 +12,11 @@ namespace Clinico.DAL {
             _context.SaveChanges();
         }
 
-        public void UpdateExamRoom(ExamRoom Room) {
-            _context.ExamRooms.Update(Room);
+        public void UpdateExamRoom(ExamRoom room) {
+            ExamRoom newRoom = GetExamRoom(room.Id);
+            newRoom.Type = room.Type;
+
+            _context.ExamRooms.Update(newRoom);
             _context.SaveChanges();
         }
 

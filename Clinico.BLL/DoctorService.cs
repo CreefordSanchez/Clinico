@@ -13,12 +13,6 @@ namespace Clinico.BLL {
                 _repository.CreateDoctor(doctor);
             }
         }
-        public void RemoveDoctor(Doctor doctor) {
-            if (doctor != null) {
-                _repository.RemoveDoctor(doctor);
-            }
-
-        }
 
         public void UpdateDoctor(Doctor doctor) {
             if (doctor != null) {
@@ -26,9 +20,9 @@ namespace Clinico.BLL {
             }
         }
 
-        public void DeleteDoctor(Doctor doctor) {
-            if (doctor != null) {
-                _repository.RemoveDoctor(doctor);
+        public void DeleteDoctor(int id) {
+            if (id != null) {
+                _repository.RemoveDoctor(id);
             }
         }
 

@@ -33,21 +33,41 @@ namespace Clinico.DAL {
                     .OnDelete(DeleteBehavior.Cascade);//doctor dead so apointment has to be canceled
             });
 
-            builder.Entity<ExamRoom>(entity =>
-            {
-                entity.HasKey(er => er.Id);
-
-                entity.Property(er => er.Type).IsRequired();
-            });
-
             builder.Entity<Appointment>(entity =>
             {
+                entity.HasKey(a => a.Id);
 
+                entity.Property(a => a.Duration).IsRequired();
+                entity.Property(a => a.ScheduledDate).IsRequired();
+                entity.Property(a => a.SpecialistType).IsRequired();
+
+                entity.HasOne(a => a.Patient)
+                    .WithMany(p => p.Appointments)
+                    .HasForeignKey(a => a.PatientId)
+                    .OnDelete(DeleteBehavior.SetNull);
+                entity.HasOne(a => a.Doctor)
+                    .WithMany(d => d.Appointments)
+                    .HasForeignKey(a => a.DoctorId)
+                    .OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(a => a.ExamRoom)
+                    .WithMany(er => er.Appointments)
+                    .HasForeignKey(a => a.RoomId)
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             builder.Entity<Patient>(entity =>
             {
+                entity.HasKey(p => p.Id);
 
+                entity.Property(p => p.Name).IsRequired();
+                entity.Property(p => p.Email).IsRequired();
+                entity.Property(p => p.Address).IsRequired();
+                entity.Property(p => p.PhoneNumber).IsRequired();
+
+                entity.HasMany(p => p.Appointments)
+                    .WithOne(a => a.Patient)
+                    .HasForeignKey(a => a.PatientId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

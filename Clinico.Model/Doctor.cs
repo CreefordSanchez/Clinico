@@ -1,4 +1,4 @@
-﻿using Clinico.Models;
+﻿using Clinico.Model;
 
 namespace Clinico.Model {
     public class Doctor {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Clinico.Model;
-using Clinico.Models;
 
 namespace Clinico.DAL {
     public class ClinicoContext : DbContext {

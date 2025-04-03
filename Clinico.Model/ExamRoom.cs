@@ -1,5 +1,5 @@
 ﻿using Clinico.Model;
-namespace Clinico.Models {
+namespace Clinico.Model {
     public class ExamRoom {
         public int Id { get; set; }
         public string Type { get; set; }

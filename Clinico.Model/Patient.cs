@@ -1,6 +1,6 @@
 ﻿using Clinico.Model;
 
-namespace Clinico.Models {
+namespace Clinico.Model {
     public class Patient {
         public int Id { get; set; }
         public string Name { get; set; }

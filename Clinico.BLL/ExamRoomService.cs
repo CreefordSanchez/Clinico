@@ -8,28 +8,22 @@ namespace Clinico.BLL {
             _repository = repository;
         }
 
-        public void RemoveExamRoom(ExamRoom room) {
+        public async Task RemoveExamRoom(int id) {
+            await _repository.RemoveExamRoom(id);         
+        }
+
+        public async Task UpdateExamRoom(ExamRoom room) {
             if (room != null) {
-                _repository.RemoveExamRoom(room);
+                await _repository.UpdateExamRoom(room);
             }
         }
 
-        public void UpdateExamRoom(ExamRoom room) {
-            if (room != null) {
-                _repository.UpdateExamRoom(room);
-            }
+        public async Task<ExamRoom> GetExamRoom(int id) {
+            return await _repository.GetExamRoom(id);
         }
 
-        public ExamRoom GetExamRoom(int id) {
-            if (id != null) {
-                return _repository.GetExamRoom(id);
-            }
-
-            return new ExamRoom();
-        }
-
-        public List<ExamRoom> GetExamRoomsList() {
-            List<ExamRoom> list = _repository.GetExamRoomList();
+        public async Task<List<ExamRoom>> GetExamRoomsList() {
+            List<ExamRoom> list = await _repository.GetExamRoomList();
 
             if (list != null) {
                 return list;

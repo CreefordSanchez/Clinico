@@ -7,19 +7,19 @@ namespace Clinico.DAL {
             _context = context;
         }
 
-        public void CreateDoctor(Doctor doctor) {
+        public async Task CreateDoctor(Doctor doctor) {
             _context.Doctors.Add(doctor);
             _context.SaveChanges();
         }
 
-        public void RemoveDoctor(int id) {
-            Doctor doctor = GetDoctor(id);
+        public async Task RemoveDoctor(int id) {
+            Doctor doctor = await GetDoctor(id);
             _context.Remove(doctor);
             _context.SaveChanges();
         }
 
-        public void UpdateDoctor(Doctor doctor) {
-            Doctor Newdoctor = GetDoctor(doctor.Id);
+        public async Task UpdateDoctor(Doctor doctor) {
+            Doctor Newdoctor = await GetDoctor(doctor.Id);
             Newdoctor.Name = doctor.Name;
             Newdoctor.Email = doctor.Email;
             Newdoctor.Address = doctor.Address;
@@ -30,11 +30,11 @@ namespace Clinico.DAL {
             _context.SaveChanges();
         }
 
-        public Doctor GetDoctor(int id) {
+        public async Task<Doctor> GetDoctor(int id) {
             return _context.Doctors.Find(id);
         }
 
-        public List<Doctor> GetDoctorList() {
+        public async Task<List<Doctor>> GetDoctorList() {
             return _context.Doctors.ToList();
         }
     }

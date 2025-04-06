@@ -7,25 +7,27 @@ namespace Clinico.DAL {
             _context = context;
         }
 
-        public void RemoveExamRoom(ExamRoom Room) {
-            _context.ExamRooms.Remove(Room);
+        public async Task RemoveExamRoom(int id) {
+            ExamRoom room = await GetExamRoom(id);
+
+             _context.ExamRooms.Remove(room);
             _context.SaveChanges();
         }
 
-        public void UpdateExamRoom(ExamRoom room) {
-            ExamRoom newRoom = GetExamRoom(room.Id);
+        public async Task UpdateExamRoom(ExamRoom room) {
+            ExamRoom newRoom = await GetExamRoom(room.Id);
             newRoom.Type = room.Type;
 
             _context.ExamRooms.Update(newRoom);
             _context.SaveChanges();
         }
 
-        public ExamRoom GetExamRoom(int id) {
-            return _context.ExamRooms.Find(id);
+        public async Task<ExamRoom> GetExamRoom(int id) {
+            return  _context.ExamRooms.Find(id);
         }
 
-        public List<ExamRoom> GetExamRoomList() {
-            return _context.ExamRooms.ToList();
+        public async Task<List<ExamRoom>> GetExamRoomList() {
+            return  _context.ExamRooms.ToList();
         }
     }
 }

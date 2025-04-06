@@ -8,40 +8,27 @@ namespace Clinico.BLL {
         public DoctorService(DoctorRepository repository) {
             _repository = repository;
         }
-        public void CreateDoctor(Doctor doctor) {
+        public async Task CreateDoctor(Doctor doctor) {
             if (doctor != null) {
-                _repository.CreateDoctor(doctor);
+                await _repository.CreateDoctor(doctor);
             }
         }
-
-        public void UpdateDoctor(Doctor doctor) {
+        public async Task UpdateDoctor(Doctor doctor) {
             if (doctor != null) {
-                _repository.UpdateDoctor(doctor);
+                await _repository.UpdateDoctor(doctor);
             }
         }
 
-        public void DeleteDoctor(int id) {
-            if (id != null) {
-                _repository.RemoveDoctor(id);
-            }
+        public async Task DeleteDoctor(int id) {
+           await _repository.RemoveDoctor(id);            
         }
 
-        public Doctor GetDoctor(int id) {
-            if (id != null) {
-                return _repository.GetDoctor(id);
-            }
-
-            return new Doctor();
+        public async Task<Doctor> GetDoctor(int id) {
+           return await _repository.GetDoctor(id);
         }
 
-        public List<Doctor> GetDoctorList() {
-            List<Doctor> list = _repository.GetDoctorList();
-
-            if (list != null) {
-                return list;
-            }
-
-            return new List<Doctor>();
+        public async Task<List<Doctor>> GetDoctorList() {
+            return await _repository.GetDoctorList();
         }
     }
 }

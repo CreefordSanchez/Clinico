@@ -1,4 +1,4 @@
-﻿using Clinico.Model;
+﻿using Clinico.Models;
 
 namespace Clinico.Model {
     public class Appointment {

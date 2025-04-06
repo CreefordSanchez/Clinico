@@ -1,5 +1,4 @@
-﻿using Clinico.Models;
-using Clinico.DAL;
+﻿using Clinico.DAL;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Clinico.Model;

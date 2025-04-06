@@ -1,4 +1,4 @@
-﻿using Clinico.Models;
+﻿using Clinico.Model;
 using Clinico.DAL;
 using System;
 using System.Collections.Generic;

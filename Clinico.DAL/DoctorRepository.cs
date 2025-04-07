@@ -9,13 +9,13 @@ namespace Clinico.DAL {
 
         public async Task CreateDoctor(Doctor doctor) {
             _context.Doctors.Add(doctor);
-            _context.SaveChanges();
+             await _context.SaveChangesAsync();
         }
 
         public async Task RemoveDoctor(int id) {
             Doctor doctor = await GetDoctor(id);
             _context.Remove(doctor);
-            _context.SaveChanges();
+             await _context.SaveChangesAsync();
         }
 
         public async Task UpdateDoctor(Doctor doctor) {
@@ -27,7 +27,7 @@ namespace Clinico.DAL {
             Newdoctor.Specialty = doctor.Specialty;
 
             _context.Update(Newdoctor);
-            _context.SaveChanges();
+             await _context.SaveChangesAsync();
         }
 
         public async Task<Doctor> GetDoctor(int id) {

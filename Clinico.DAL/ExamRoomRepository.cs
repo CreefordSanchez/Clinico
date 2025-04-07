@@ -11,7 +11,7 @@ namespace Clinico.DAL {
             ExamRoom room = await GetExamRoom(id);
 
              _context.ExamRooms.Remove(room);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateExamRoom(ExamRoom room) {
@@ -19,7 +19,7 @@ namespace Clinico.DAL {
             newRoom.Type = room.Type;
 
             _context.ExamRooms.Update(newRoom);
-            _context.SaveChanges();
+             await _context.SaveChangesAsync();
         }
 
         public async Task<ExamRoom> GetExamRoom(int id) {

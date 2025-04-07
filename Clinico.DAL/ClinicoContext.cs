@@ -11,6 +11,8 @@ namespace Clinico.DAL {
         public DbSet<Patient> Patients { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder) {
+            base.OnModelCreating(builder);
+
             builder.Entity<Doctor>(entity =>
             {
                 entity.HasKey(d => d.Id);
@@ -30,6 +32,13 @@ namespace Clinico.DAL {
                     .WithOne(p => p.Doctor)
                     .HasForeignKey(p => p.DoctorId)
                     .OnDelete(DeleteBehavior.Cascade);//doctor dead so apointment has to be canceled
+            });
+
+            builder.Entity<ExamRoom>(entity =>
+            {
+                entity.HasKey(er => er.Id);
+
+                entity.Property(er => er.Type).IsRequired();
             });
 
             builder.Entity<Appointment>(entity =>

@@ -12,8 +12,8 @@ namespace Clinico.Controllers {
             _service = service;
         }
 
-        [HttpGet("Get/{id}")]
-        public async Task<IActionResult> GetDoctor(int id) {
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Doctor>> GetDoctor(int id) {
             Doctor doctor = await _service.GetDoctor(id);
 
             if (doctor == null) return NotFound();
@@ -21,8 +21,8 @@ namespace Clinico.Controllers {
             return Ok(doctor);
         }
 
-        [HttpGet("Get")]
-        public async Task<IActionResult> GetDoctorList() {
+        [HttpGet]
+        public async Task<ActionResult<List<Doctor>>> GetDoctorList() {
             List<Doctor> list = await _service.GetDoctorList();
 
             if (list == null) return NotFound();
@@ -30,8 +30,8 @@ namespace Clinico.Controllers {
             return Ok(list);
         }
 
-        [HttpPost("Create")]
-        public async Task<IActionResult> NewDoctor(Doctor doctor) {
+        [HttpPost]
+        public async Task<ActionResult> NewDoctor(Doctor doctor) {
             if (doctor == null) return NotFound();
 
             if (!ModelState.IsValid) return BadRequest();
@@ -40,16 +40,16 @@ namespace Clinico.Controllers {
             return Ok();
         }
 
-        [HttpPut("Edit/{id}")]
-        public async Task<IActionResult> EditDoctor(int id, Doctor doctor) {
+        [HttpPut("{id}")]
+        public async Task<ActionResult> EditDoctor(int id, Doctor doctor) {
             if (id != doctor.Id || !ModelState.IsValid) return BadRequest();
             await _service.UpdateDoctor(doctor);          
 
             return Ok();
         }
 
-        [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult>  DeleteDoctor(int id) {
+        [HttpDelete("{id}")]
+        public async Task<ActionResult>  DeleteDoctor(int id) {
             Doctor doctor = await _service.GetDoctor(id);
 
             if (doctor == null) return NotFound();

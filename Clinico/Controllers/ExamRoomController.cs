@@ -12,8 +12,8 @@ namespace Clinico.Controllers {
             _service = service;
         }
 
-        [HttpGet("Get/{id}")]
-        public async Task<IActionResult> GetRoom(int id) {
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ExamRoom>> GetRoom(int id) {
             ExamRoom room = await _service.GetExamRoom(id);
 
             if (room == null) return NotFound();
@@ -21,8 +21,8 @@ namespace Clinico.Controllers {
             return Ok(room);
         }
 
-        [HttpGet("Get")]
-        public async Task<IActionResult> GetExamRoomList() {
+        [HttpGet]
+        public async Task<ActionResult<List<ExamRoom>>> GetExamRoomList() {
             List<ExamRoom> list = await _service.GetExamRoomsList();
 
             if (list == null) return NotFound();
@@ -30,16 +30,16 @@ namespace Clinico.Controllers {
             return Ok(list);
         }
 
-        [HttpPut("Edit/{id}")]
-        public async Task<IActionResult> EditDoctor(int id, ExamRoom room) {
+        [HttpPut("{id}")]
+        public async Task<ActionResult> EditDoctor(int id, ExamRoom room) {
             if (id != room.Id || !ModelState.IsValid) return BadRequest();
             await _service.UpdateExamRoom(room);
 
             return Ok();
         }
 
-        [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> DeletRoom(int id) {
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeletRoom(int id) {
             ExamRoom room = await _service.GetExamRoom(id);
 
             if (room == null) return NotFound();

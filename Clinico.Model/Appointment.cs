@@ -1,6 +1,4 @@
-﻿using Clinico.Models;
-
-namespace Clinico.Model {
+﻿namespace Clinico.Model {
     public class Appointment {
         public int Id { get; set; }
         public int Duration { get; set; }

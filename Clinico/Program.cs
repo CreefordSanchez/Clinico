@@ -1,3 +1,6 @@
+using Clinico.DAL;
+using Clinico.BLL;
+using Microsoft.EntityFrameworkCore;
 
 namespace Clinico
 {
@@ -6,6 +9,20 @@ namespace Clinico
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddDbContext<ClinicoContext>(options =>
+           options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddTransient<PatientRepository>();
+            builder.Services.AddTransient<ExamRoomRepository>();
+            builder.Services.AddTransient<DoctorRepository>();
+            builder.Services.AddTransient<AppointmentRepository>();
+
+
+            builder.Services.AddTransient<PatientService>();
+            builder.Services.AddTransient<ExamRoomService>();
+            builder.Services.AddTransient<DoctorService>();
+            builder.Services.AddTransient<AppointmentService>();
 
             // Add services to the container.
 

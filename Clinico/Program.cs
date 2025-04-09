@@ -1,6 +1,8 @@
 using Clinico.DAL;
 using Clinico.BLL;
 using Microsoft.EntityFrameworkCore;
+using Clinico.Model;
+using AutoMapper;
 
 namespace Clinico
 {
@@ -9,6 +11,9 @@ namespace Clinico
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddAutoMapper(typeof(MapperProfile)); 
+
 
             builder.Services.AddDbContext<ClinicoContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

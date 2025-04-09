@@ -25,7 +25,7 @@ namespace Clinico.DAL {
             Newdoctor.Address = doctor.Address;
             Newdoctor.PhoneNumber = doctor.PhoneNumber;
             Newdoctor.Specialty = doctor.Specialty;
-
+             
             _context.Update(Newdoctor);
              await _context.SaveChangesAsync();
         }

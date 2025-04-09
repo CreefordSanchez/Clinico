@@ -27,12 +27,7 @@ namespace Clinico.DAL {
                     .WithOne(er => er.Doctor)
                     .HasForeignKey(er => er.DoctorId)
                     .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasMany(d => d.Appointments)
-                    .WithOne(p => p.Doctor)
-                    .HasForeignKey(p => p.DoctorId)
-                    .OnDelete(DeleteBehavior.Cascade);//doctor dead so apointment has to be canceled
-            });
+              });
 
             builder.Entity<ExamRoom>(entity =>
             {

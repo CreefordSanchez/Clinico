@@ -8,14 +8,10 @@ namespace Clinico.Controllers {
     [ApiController]
     public class DoctorController : Controller {
         private readonly DoctorService _service;
-        private readonly ExamRoomService _roomService;
-        private readonly AppointmentService _appointmentService;
         private readonly IMapper _mapper;
 
-        public DoctorController(DoctorService service, ExamRoomService roomService, AppointmentService appointmentService, IMapper mapper) {
+        public DoctorController(DoctorService service, IMapper mapper) {
             _service = service;
-            _roomService = roomService;
-            _appointmentService = appointmentService;
             _mapper = mapper;
         }
 
@@ -25,21 +21,22 @@ namespace Clinico.Controllers {
             
             if (doctor == null) return NotFound();
 
-            DoctorDTO dto = _mapper.Map<DoctorDTO>(doctor);
-            return Ok(dto);
+            return Ok(doctor);
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Doctor>>> GetDoctorList() {
+        public async Task<ActionResult<List<DoctorListDTO>>> GetDoctorList() {
             List<Doctor> list = await _service.GetDoctorList();
 
             if (list == null) return NotFound();
 
-            return Ok(list);
+            List<DoctorListDTO> listDTO = _mapper.Map<List<DoctorListDTO>>(list);
+
+            return Ok(listDTO);
         }
 
         [HttpPost]
-        public async Task<ActionResult> NewDoctor(DoctorCreateDTO doctorDTO) {
+        public async Task<ActionResult> NewDoctor(DoctorDTO doctorDTO) {
             if (doctorDTO.Name == null || doctorDTO.Email == null || doctorDTO.Address == null 
                 || doctorDTO.PhoneNumber == null || doctorDTO.Specialty == null) {
                 return BadRequest();                
@@ -52,28 +49,17 @@ namespace Clinico.Controllers {
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> EditDoctor(
-            int id, string name, string email, string address,
-            string phoneNumber, string specialty, int appointmentId, int roomId) {
-            Doctor doctor = await _service.GetDoctor(id);
+        public async Task<ActionResult> EditDoctor(int id, DoctorDTO doctor) {
+            if (id < 0 || doctor.Email == null ||
+               doctor.Address == null || doctor.PhoneNumber == null ||
+               doctor.Specialty == null || doctor.Name ==null) return BadRequest();
 
-            if (doctor == null || await _roomService.GetExamRoom(roomId) == null ||
-                await _appointmentService.GetAppointmentByIdAsync(appointmentId) == null
-                ) return NotFound();
-            
-            if (name == null || email == null ||
-                address == null || phoneNumber == null ||
-                specialty == null) return BadRequest();
+            if (await _service.GetDoctor(id) == null) return NotFound();
 
+            Doctor doctorNew = _mapper.Map<Doctor>(doctor);
+            doctorNew.Id = id;
 
-            await _service.UpdateDoctor(new Doctor()
-            {
-                Name = name,
-                Email = email,
-                Address = address,
-                PhoneNumber = phoneNumber,
-                Specialty = specialty
-            });
+            await _service.UpdateDoctor(doctorNew);
 
             return Ok();
         }

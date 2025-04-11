@@ -40,8 +40,7 @@ namespace Clinico.DAL {
 
         public async Task<List<DoctorListDTO>> GetDoctorList() {
             List<Doctor> list = _context.Doctors.ToList();
-            List<DoctorListDTO> listDTO = _mapper.Map<List<DoctorListDTO>>(list);
-            return listDTO;
+            return _mapper.Map<List<DoctorListDTO>>(list);
         }
     }
 }

@@ -17,11 +17,7 @@ namespace Clinico.DAL
 
         public async Task<List<Appointment>> GetAllAppointmentsAsync()
         {
-            return await _context.Appointments
-                .Include(a => a.Doctor)
-                .Include(a => a.Patient)
-                .Include(a => a.ExamRoom)
-                .ToListAsync();
+            return await _context.Appointments.ToListAsync();
 
         }
 

@@ -1,4 +1,5 @@
-﻿using Clinico.BLL;
+﻿using AutoMapper;
+using Clinico.BLL;
 using Clinico.Model;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,21 +14,24 @@ namespace Clinico.API.Controllers
     public class AppointmentsController : ControllerBase
     {
         private readonly AppointmentService _appointmentService;
-
-        public AppointmentsController(AppointmentService appointmentService)
+        private readonly IMapper _appointmentMapper;
+        public AppointmentsController(AppointmentService appointmentService, IMapper appointmentMapper)
         {
             _appointmentService = appointmentService;
+            _appointmentMapper = appointmentMapper;
         }
-
-        // GET: api/appointments
+        // FromQuery is used to filter the appointments based on the provided parameters
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Appointment>>> GetAll(
+        public async Task<ActionResult<IEnumerable<AppointmentDTO>>> GetAll(
             [FromQuery] int? doctorId,
             [FromQuery] int? patientId,
             [FromQuery] DateTime? startDate,
             [FromQuery] DateTime? endDate)
+
         {
-            var appointments = await _appointmentService.GetAppointmentsAsync();
+            List<Appointment> appointments = await _appointmentService.GetAppointmentsAsync();
+            if(appointments == null) return NotFound();
+            List<AppointmentDTO> appointmentsDTO = _appointmentMapper.Map<List<AppointmentDTO>>(appointments);
 
             if (doctorId.HasValue)
                 appointments = appointments.Where(a => a.DoctorId == doctorId).ToList();
@@ -44,50 +48,68 @@ namespace Clinico.API.Controllers
             return Ok(appointments);
         }
 
-        // GET: api/appointments/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Appointment>> GetById(int id)
         {
-            var appointment = await _appointmentService.GetAppointmentByIdAsync(id);
+            Appointment appointment = await _appointmentService.GetAppointmentByIdAsync(id);
             if (appointment == null)
                 return NotFound();
 
             return Ok(appointment);
         }
 
-        // POST: api/appointments
         [HttpPost]
-        public async Task<ActionResult> Create(Appointment appointment)
+        public async Task<ActionResult> Create(AppointmentDTO appointmentDTO)
         {
-            await _appointmentService.AddAppointmentAsync(appointment);
-            return CreatedAtAction(nameof(GetById), new { id = appointment.Id }, appointment);
+            if (appointmentDTO.Duration == 0 || appointmentDTO.ScheduledDate == default
+                || string.IsNullOrWhiteSpace(appointmentDTO.SpecialistType)
+                || appointmentDTO.DoctorId == 0 || appointmentDTO.PatientId == 0 || appointmentDTO.RoomId == 0)
+            {
+                return BadRequest("Appointment details cannot be null or zero.");
+            }
+
+            try
+            {
+                Appointment appointment = await _appointmentService.CreateAppointmentWithEntitiesAsync(appointmentDTO);
+                return CreatedAtAction(nameof(GetById), new { id = appointment.Id }, appointment);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // PUT: api/appointments/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, Appointment appointment)
+        public async Task<ActionResult> Edit(int id, AppointmentDTO appointmentDTO)
         {
-            if (id != appointment.Id)
-                return BadRequest("ID mismatch.");
+            if (id == 0 || appointmentDTO == null)
+            {
+                return BadRequest("Invalid appointment ID or data.");
+            }
 
-            var existing = await _appointmentService.GetAppointmentByIdAsync(id);
-            if (existing == null)
-                return NotFound();
-
-            await _appointmentService.UpdateAppointmentAsync(appointment);
-            return NoContent();
+            try
+            {
+                Appointment updatedAppointment = await _appointmentService.UpdateAppointmentWithEntitiesAsync(id, appointmentDTO);
+                return Ok(updatedAppointment);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Appointment with ID {id} not found.");
+            }
         }
 
-        // DELETE: api/appointments/5
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var existing = await _appointmentService.GetAppointmentByIdAsync(id);
-            if (existing == null)
-                return NotFound();
-
+            Appointment existing = await _appointmentService.GetAppointmentByIdAsync(id);
+            if (existing == null) return NotFound();
             await _appointmentService.DeleteAppointmentAsync(id);
-            return NoContent();
+            return Ok();
         }
     }
 }

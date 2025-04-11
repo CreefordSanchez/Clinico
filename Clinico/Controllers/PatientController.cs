@@ -17,18 +17,14 @@ namespace Clinico.API.Controllers
             _patientService = patientService;
             _patientMapper = patientMapper;
         }
-
-        // GET: api/patients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Patient>>> GetAllPatients()
+        public async Task<ActionResult<IEnumerable<PatientDTO>>> GetAllPatients()
         {
             List<Patient> patients = await _patientService.GetPatientsAsync();
             if (patients == null) return NotFound();
             List<PatientDTO> patientsDTO = _patientMapper.Map<List<PatientDTO>>(patients);
             return Ok(patientsDTO);
         }
-
-        // GET: api/patients/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Patient>> GetPatientById(int id)
         {
@@ -37,8 +33,6 @@ namespace Clinico.API.Controllers
                 return NotFound();
             return Ok(patient);
         }
-
-        // POST: api/patients
         [HttpPost]
         public async Task<ActionResult> CreatePatient(PatientDTO patientDTO)
         {
@@ -58,8 +52,6 @@ namespace Clinico.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        // PUT: api/patients/5
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdatePatient(int id, PatientDTO patientDTO)
         {
@@ -84,8 +76,6 @@ namespace Clinico.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        // DELETE: api/patients/5
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePatient(int id)
         {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Clinico.Model;
+using AutoMapper;
 
 namespace Clinico.BLL
 {
@@ -11,17 +12,19 @@ namespace Clinico.BLL
         private readonly PatientRepository _patientRepository;
         private readonly DoctorRepository _doctorRepository;
         private readonly ExamRoomRepository _roomRepository;
-
+        private readonly IMapper _mapper;
         public AppointmentService(
             AppointmentRepository appointmentRepository, 
             PatientRepository patientRepository, 
             DoctorRepository doctorRepository, 
-            ExamRoomRepository roomRepository)
+            ExamRoomRepository roomRepository,
+            IMapper mapper)
         {
             _appointmentRepository = appointmentRepository;
             _patientRepository = patientRepository;
             _doctorRepository = doctorRepository;
             _roomRepository = roomRepository;
+            _mapper = mapper;
         }
         public async Task<List<Appointment>> GetAppointmentsAsync()
         {
@@ -33,12 +36,15 @@ namespace Clinico.BLL
         }
         public async Task<Appointment> CreateAppointmentWithEntitiesAsync(AppointmentDTO dto)
         {
-            Doctor doctor = await _doctorRepository.GetDoctor(dto.DoctorId)
+            /*
+             Doctor doctor = await _doctorRepository.GetDoctor(dto.DoctorId)
                          ?? throw new ArgumentException("Doctor not found.");
             Patient patient = await _patientRepository.GetPatientByIdAsync(dto.PatientId)
                          ?? throw new ArgumentException("Patient not found.");
             ExamRoom room = await _roomRepository.GetExamRoom(dto.RoomId)
                          ?? throw new ArgumentException("Room not found.");
+
+                        maybe try doign the validation in the controller. some wierd stuff goining on when injecting other repo in service
 
             var appointment = new Appointment
             {
@@ -57,6 +63,15 @@ namespace Clinico.BLL
             patient.Appointments ??= new List<Appointment>();
             patient.Appointments.Add(appointment);
             await _patientRepository.UpdatePatientAsync(patient);
+            return appointment;
+        }
+             */
+
+
+
+            Appointment appointment = _mapper.Map<Appointment>(dto);
+
+            await _appointmentRepository.AddAppointmentAsync(appointment);
             return appointment;
         }
         public async Task AddAppointmentAsync(Appointment appointment)

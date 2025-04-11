@@ -35,7 +35,7 @@ namespace Clinico.DAL {
         }
 
         public async Task<Doctor> GetDoctor(int id) {
-            return _context.Doctors.Find(id);
+            return await _context.Doctors.FindAsync(id);
         }
 
         public async Task<List<DoctorListDTO>> GetDoctorList() {

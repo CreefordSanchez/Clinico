@@ -1,4 +1,5 @@
-﻿using Clinico.BLL;
+﻿using AutoMapper;
+using Clinico.BLL;
 using Clinico.Model;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -11,29 +12,31 @@ namespace Clinico.API.Controllers
     public class PatientsController : ControllerBase
     {
         private readonly PatientService _patientService;
+        private readonly IMapper _patientMapper;
 
-        public PatientsController(PatientService patientService)
+        public PatientsController(PatientService patientService, IMapper patientMapper)
         {
             _patientService = patientService;
+            _patientMapper = patientMapper;
         }
 
         // GET: api/patients
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Patient>>> GetAll()
         {
-            var patients = await _patientService.GetPatientsAsync();
+            List<Patient> patients = await _patientService.GetPatientsAsync();
             return Ok(patients);
         }
 
         // GET: api/patients/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Patient>> GetById(int id)
+        public async Task<ActionResult<Patient>> GetPatientById(int id)
         {
-            var patient = await _patientService.GetPatientByIdAsync(id);
+            Patient patient = await _patientService.GetPatientByIdAsync(id);
             if (patient == null)
                 return NotFound();
-
-            return Ok(patient);
+            PatientDTO dto = _patientMapper.Map<PatientDTO>(patient); //Patient => PatientDto
+            return Ok(dto);
         }
 
         // POST: api/patients
@@ -43,7 +46,7 @@ namespace Clinico.API.Controllers
             try
             {
                 await _patientService.AddPatientAsync(patient);
-                return CreatedAtAction(nameof(GetById), new { id = patient.Id }, patient);
+                return CreatedAtAction(nameof(GetPatientById), new { id = patient.Id }, patient);
             }
             catch (System.ArgumentException ex)
             {

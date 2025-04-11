@@ -61,11 +61,20 @@ namespace Clinico.BLL
         //}
         public async Task AddAppointmentAsync(Appointment appointment)
         {
-            if (appointment != null)
-            {
-                await _appointmentRepository.AddAppointmentAsync(appointment);
-            }
+            var doctor = await _doctorRepository.GetDoctor(appointment.DoctorId);
+            var patient = await _patientRepository.GetPatientByIdAsync(appointment.PatientId);
+            var room = await _roomRepository.GetExamRoom(appointment.RoomId);
+
+            if (doctor == null)
+                throw new ArgumentException($"Doctor with ID {appointment.DoctorId} does not exist.");
+            if (patient == null)
+                throw new ArgumentException($"Patient with ID {appointment.PatientId} does not exist.");
+            if (room == null)
+                throw new ArgumentException($"Room with ID {appointment.RoomId} does not exist.");
+
+            await _appointmentRepository.AddAppointmentAsync(appointment);
         }
+
         //public async Task<Appointment> UpdateAppointmentWithEntitiesAsync(int id, AppointmentDTO dto)
         //{
         //    Appointment appointment = await _appointmentRepository.GetAppointmentByIdAsync(id);

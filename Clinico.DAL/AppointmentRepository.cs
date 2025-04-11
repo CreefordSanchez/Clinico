@@ -18,10 +18,11 @@ namespace Clinico.DAL
         public async Task<List<Appointment>> GetAllAppointmentsAsync()
         {
             return await _context.Appointments
-                .Include(a => a.DoctorId)
-                .Include(a => a.PatientId)
-                .Include(a => a.RoomId)
+                .Include(a => a.Doctor)
+                .Include(a => a.Patient)
+                .Include(a => a.ExamRoom)
                 .ToListAsync();
+
         }
 
         public async Task<Appointment> GetAppointmentByIdAsync(int id)
@@ -31,7 +32,7 @@ namespace Clinico.DAL
 
         public async Task AddAppointmentAsync(Appointment appointment)
         {
-            await _context.Appointments.AddAsync(appointment);
+            _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
         }
 

@@ -33,7 +33,12 @@ namespace Clinico.DAL
 
         public async Task UpdatePatientAsync(Patient patient)
         {
-            _context.Patients.Update(patient);
+            Patient newPatient = await GetPatientByIdAsync(patient.Id);
+            newPatient.Name = patient.Name;
+            newPatient.Email = patient.Email;
+            newPatient.Address = patient.Address;
+            newPatient.PhoneNumber = patient.PhoneNumber;
+            _context.Patients.Update(newPatient);
             await _context.SaveChangesAsync();
         }
 

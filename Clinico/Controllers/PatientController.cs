@@ -60,8 +60,6 @@ namespace Clinico.API.Controllers
             {
                 return BadRequest("Patient details cannot be null.");
             }
-            try
-            {
                 if (await _patientService.GetPatientByIdAsync(id) == null)
                     {
                         return NotFound("No patient found by that id.");
@@ -70,11 +68,6 @@ namespace Clinico.API.Controllers
                 patientUpdate.Id = id;
                 await _patientService.UpdatePatientAsync(patientUpdate);
                 return Ok(patientUpdate);
-            }
-            catch (System.ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePatient(int id)

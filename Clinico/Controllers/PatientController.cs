@@ -2,8 +2,6 @@
 using Clinico.BLL;
 using Clinico.Model;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Clinico.API.Controllers
 {
@@ -22,10 +20,12 @@ namespace Clinico.API.Controllers
 
         // GET: api/patients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Patient>>> GetAll()
+        public async Task<ActionResult<IEnumerable<Patient>>> GetAllPatients()
         {
             List<Patient> patients = await _patientService.GetPatientsAsync();
-            return Ok(patients);
+            if (patients == null) return NotFound();
+            List<PatientDTO> patientsDTO = _patientMapper.Map<List<PatientDTO>>(patients);
+            return Ok(patientsDTO);
         }
 
         // GET: api/patients/5
@@ -35,13 +35,12 @@ namespace Clinico.API.Controllers
             Patient patient = await _patientService.GetPatientByIdAsync(id);
             if (patient == null)
                 return NotFound();
-            PatientDTO dto = _patientMapper.Map<PatientDTO>(patient); //Patient => PatientDto
-            return Ok(dto);
+            return Ok(patient);
         }
 
         // POST: api/patients
         [HttpPost]
-        public async Task<ActionResult> Create(Patient patient)
+        public async Task<ActionResult> CreatePatient(Patient patient)
         {
             try
             {

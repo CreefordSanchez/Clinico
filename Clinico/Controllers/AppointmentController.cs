@@ -59,7 +59,7 @@ namespace Clinico.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(AppointmentDTO appointmentDTO)
+        public async Task<ActionResult> CreateAppointment(AppointmentDTO appointmentDTO)
         {
             if (appointmentDTO.Duration == 0 || appointmentDTO.ScheduledDate == default
                 || string.IsNullOrWhiteSpace(appointmentDTO.SpecialistType)
@@ -68,38 +68,22 @@ namespace Clinico.API.Controllers
                 return BadRequest("Appointment details cannot be null or zero.");
             }
 
-            try
-            {
-                Appointment appointment = await _appointmentService.CreateAppointmentWithEntitiesAsync(appointmentDTO);
-                return CreatedAtAction(nameof(GetById), new { id = appointment.Id }, appointment);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            Appointment appointment = _appointmentMapper.Map<Appointment>(appointmentDTO);
+            await _appointmentService.AddAppointmentAsync(appointment);
+            return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Edit(int id, AppointmentDTO appointmentDTO)
-        {
-            if (id == 0 || appointmentDTO == null)
-            {
-                return BadRequest("Invalid appointment ID or data.");
-            }
-
-            try
-            {
-                Appointment updatedAppointment = await _appointmentService.UpdateAppointmentWithEntitiesAsync(id, appointmentDTO);
-                return Ok(updatedAppointment);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound($"Appointment with ID {id} not found.");
-            }
+        public async Task<ActionResult> EditAppointment(int id, AppointmentDTO appointmentDTO) 
+        { 
+            if (id < 0 || appointmentDTO.Duration == 0 || appointmentDTO.ScheduledDate == null
+                || string.IsNullOrWhiteSpace(appointmentDTO.SpecialistType) || appointmentDTO.DoctorId == 0 
+                || appointmentDTO.PatientId == 0 || appointmentDTO.RoomId == 0) return BadRequest("Appointment details cannot be null or zero.");
+            if (await _appointmentService.GetAppointmentByIdAsync(id) == null) return NotFound();
+            Appointment appointmentNew = _appointmentMapper.Map<Appointment>(appointmentDTO);
+            appointmentNew.Id = id;
+            await _appointmentService.UpdateAppointmentAsync(appointmentNew);
+            return Ok();
         }
 
 

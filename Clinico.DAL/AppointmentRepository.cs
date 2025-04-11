@@ -18,9 +18,9 @@ namespace Clinico.DAL
         public async Task<List<Appointment>> GetAllAppointmentsAsync()
         {
             return await _context.Appointments
-                .Include(a => a.Doctor)
-                .Include(a => a.Patient)
-                .Include(a => a.ExamRoom)
+                .Include(a => a.DoctorId)
+                .Include(a => a.PatientId)
+                .Include(a => a.RoomId)
                 .ToListAsync();
         }
 
@@ -37,6 +37,13 @@ namespace Clinico.DAL
 
         public async Task UpdateAppointmentAsync(Appointment appointment)
         {
+            Appointment newAppointment = await GetAppointmentByIdAsync(appointment.Id);
+            newAppointment.Duration = appointment.Duration;
+            newAppointment.ScheduledDate = appointment.ScheduledDate;
+            newAppointment.SpecialistType = appointment.SpecialistType;
+            newAppointment.DoctorId = appointment.DoctorId;
+            newAppointment.PatientId = appointment.PatientId;
+            newAppointment.RoomId = appointment.RoomId;
             _context.Appointments.Update(appointment);
             await _context.SaveChangesAsync();
         }

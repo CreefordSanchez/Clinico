@@ -40,8 +40,14 @@ namespace Clinico.API.Controllers
 
         // POST: api/patients
         [HttpPost]
-        public async Task<ActionResult> CreatePatient(Patient patient)
+        public async Task<ActionResult> CreatePatient(PatientDTO patientDTO)
         {
+            if(patientDTO.Name == null || patientDTO.Email == null || patientDTO.Address == null
+                || patientDTO.PhoneNumber == null)
+            {
+                return BadRequest("Patient details cannot be null.");
+            }
+            Patient patient = _patientMapper.Map<Patient>(patientDTO);
             try
             {
                 await _patientService.AddPatientAsync(patient);
@@ -55,15 +61,23 @@ namespace Clinico.API.Controllers
 
         // PUT: api/patients/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, Patient patient)
+        public async Task<ActionResult> UpdatePatient(int id, PatientDTO patientDTO)
         {
-            if (id != patient.Id)
-                return BadRequest("ID mismatch.");
-
+            if (id < 0 || patientDTO.Name == null || patientDTO.Email == null || patientDTO.Address == null
+                || patientDTO.PhoneNumber == null)
+            {
+                return BadRequest("Patient details cannot be null.");
+            }
             try
             {
-                await _patientService.UpdatePatientAsync(patient);
-                return NoContent();
+                if (await _patientService.GetPatientByIdAsync(id) == null)
+                    {
+                        return NotFound("No patient found by that id.");
+                    }
+                Patient patientUpdate = _patientMapper.Map<Patient>(patientDTO);
+                patientUpdate.Id = id;
+                await _patientService.UpdatePatientAsync(patientUpdate);
+                return Ok(patientUpdate);
             }
             catch (System.ArgumentException ex)
             {
@@ -73,14 +87,13 @@ namespace Clinico.API.Controllers
 
         // DELETE: api/patients/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> DeletePatient(int id)
         {
-            var patient = await _patientService.GetPatientByIdAsync(id);
-            if (patient == null)
-                return NotFound();
+            Patient patient = await _patientService.GetPatientByIdAsync(id);
+            if (patient == null) return NotFound();
 
             await _patientService.DeletePatientAsync(id);
-            return NoContent();
+            return Ok();
         }
     }
 }

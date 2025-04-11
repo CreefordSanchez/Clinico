@@ -1,5 +1,4 @@
-﻿using Clinico.Model;
-
+﻿
 namespace Clinico.Model {
     public class Patient {
         public int Id { get; set; }

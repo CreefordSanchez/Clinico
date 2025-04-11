@@ -6,6 +6,8 @@ namespace Clinico.Model {
             CreateMap<Doctor, DoctorListDTO>().ReverseMap();
             CreateMap<ExamRoom, ExamRoomDTO>().ReverseMap();
             CreateMap<ExamRoom, ExamRoomEditDTO>().ReverseMap().ForMember(dest => dest.Doctor, opt => opt.Ignore());
+            CreateMap<Patient, PatientDTO>().ReverseMap();
+            CreateMap<Appointment, AppointmentDTO>().ReverseMap();
         }
     }
 }

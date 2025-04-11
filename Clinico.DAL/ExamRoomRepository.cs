@@ -3,6 +3,7 @@
 namespace Clinico.DAL {
     public class ExamRoomRepository {
         private readonly ClinicoContext _context;
+
         public ExamRoomRepository(ClinicoContext context) {
             _context = context;
         }

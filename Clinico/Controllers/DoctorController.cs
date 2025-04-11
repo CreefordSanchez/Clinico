@@ -26,13 +26,11 @@ namespace Clinico.Controllers {
 
         [HttpGet]
         public async Task<ActionResult<List<DoctorListDTO>>> GetDoctorList() {
-            List<Doctor> list = await _service.GetDoctorList();
+            List<DoctorListDTO> list = await _service.GetDoctorList();
 
             if (list == null) return NotFound();
 
-            List<DoctorListDTO> listDTO = _mapper.Map<List<DoctorListDTO>>(list);
-
-            return Ok(listDTO);
+            return Ok(list);
         }
 
         [HttpPost]

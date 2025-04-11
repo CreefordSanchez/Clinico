@@ -1,10 +1,14 @@
 ﻿using Clinico.Model;
+using AutoMapper;
+using System.Collections.Generic;
 
 namespace Clinico.DAL {
     public class DoctorRepository {
         private readonly ClinicoContext _context;
-        public DoctorRepository(ClinicoContext context) {
+        private readonly IMapper _mapper;
+        public DoctorRepository(ClinicoContext context, IMapper mapper) {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task CreateDoctor(Doctor doctor) {
@@ -34,8 +38,10 @@ namespace Clinico.DAL {
             return _context.Doctors.Find(id);
         }
 
-        public async Task<List<Doctor>> GetDoctorList() {
-            return _context.Doctors.ToList();
+        public async Task<List<DoctorListDTO>> GetDoctorList() {
+            List<Doctor> list = _context.Doctors.ToList();
+            List<DoctorListDTO> listDTO = _mapper.Map<List<DoctorListDTO>>(list);
+            return listDTO;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Clinico.BLL {
            return await _repository.GetDoctor(id);
         }
 
-        public async Task<List<Doctor>> GetDoctorList() {
+        public async Task<List<DoctorListDTO>> GetDoctorList() {
             return await _repository.GetDoctorList();
         }
     }

@@ -33,10 +33,6 @@ namespace Clinico.BLL
         }
         public async Task AddAppointmentAsync(Appointment appointment)
         {
-            Doctor doctor = await _doctorRepository.GetDoctor(appointment.DoctorId);
-            Patient patient = await _patientRepository.GetPatientByIdAsync(appointment.PatientId);
-            ExamRoom room = await _roomRepository.GetExamRoom(appointment.RoomId);
-
             await _appointmentRepository.AddAppointmentAsync(appointment);
         }
         public async Task UpdateAppointmentAsync(Appointment appointment)

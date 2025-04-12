@@ -65,7 +65,7 @@ namespace Clinico.API.Controllers
         {
             if (appointmentDTO == null)
             {
-                return BadRequest("Appointment data is required.");
+               // return BadRequest("Appointment data is required.");
             }
         if (appointmentDTO.Duration <= 0 || appointmentDTO.ScheduledDate == null
             || string.IsNullOrWhiteSpace(appointmentDTO.SpecialistType))
@@ -81,6 +81,7 @@ namespace Clinico.API.Controllers
             {
                 return NoContent();
             }
+
             Appointment appointment = _appointmentMapper.Map<Appointment>(appointmentDTO);
             await _appointmentService.AddAppointmentAsync(appointment);
             return Ok();

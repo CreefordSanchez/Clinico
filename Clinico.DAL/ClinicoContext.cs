@@ -52,7 +52,7 @@ namespace Clinico.DAL {
                 entity.HasOne(a => a.Doctor)
                     .WithMany(d => d.Appointments)
                     .HasForeignKey(a => a.DoctorId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.SetNull);
                 entity.HasOne(a => a.ExamRoom)
                     .WithMany(er => er.Appointments)
                     .HasForeignKey(a => a.RoomId)
@@ -71,7 +71,7 @@ namespace Clinico.DAL {
                 entity.HasMany(p => p.Appointments)
                     .WithOne(a => a.Patient)
                     .HasForeignKey(a => a.PatientId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             // Seed Doctors

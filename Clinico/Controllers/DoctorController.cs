@@ -35,8 +35,8 @@ namespace Clinico.Controllers {
 
         [HttpPost]
         public async Task<ActionResult> NewDoctor(DoctorDTO doctorDTO) {
-            if (doctorDTO.Name == null || doctorDTO.Email == null || doctorDTO.Address == null 
-                || doctorDTO.PhoneNumber == null || doctorDTO.Specialty == null) {
+            if (doctorDTO.Name == "" || doctorDTO.Email == "" || doctorDTO.Address == ""
+                || doctorDTO.PhoneNumber == "" || doctorDTO.Specialty == "") {
                 return BadRequest();                
             }
 
@@ -48,9 +48,9 @@ namespace Clinico.Controllers {
 
         [HttpPut("{id}")]
         public async Task<ActionResult> EditDoctor(int id, DoctorDTO doctor) {
-            if (id < 0 || doctor.Email == null ||
-               doctor.Address == null || doctor.PhoneNumber == null ||
-               doctor.Specialty == null || doctor.Name ==null) return BadRequest();
+            if (id < 0 || doctor.Email == "" ||
+               doctor.Address == "" || doctor.PhoneNumber == "" ||
+               doctor.Specialty == "" || doctor.Name == "") return BadRequest();
 
             if (await _service.GetDoctor(id) == null) return NotFound();
 

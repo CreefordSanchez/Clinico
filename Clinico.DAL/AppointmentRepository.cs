@@ -41,7 +41,7 @@ namespace Clinico.DAL
             newAppointment.DoctorId = appointment.DoctorId;
             newAppointment.PatientId = appointment.PatientId;
             newAppointment.RoomId = appointment.RoomId;
-            _context.Appointments.Update(appointment);
+            _context.Appointments.Update(newAppointment);
             await _context.SaveChangesAsync();
         }
 

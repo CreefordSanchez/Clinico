@@ -27,7 +27,7 @@ namespace Clinico.DAL {
                 entity.HasMany(d => d.ExamRooms)
                     .WithOne(er => er.Doctor)
                     .HasForeignKey(er => er.DoctorId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.SetNull);
               });
 
             builder.Entity<ExamRoom>(entity =>
@@ -56,7 +56,7 @@ namespace Clinico.DAL {
                 entity.HasOne(a => a.ExamRoom)
                     .WithMany(er => er.Appointments)
                     .HasForeignKey(a => a.RoomId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             builder.Entity<Patient>(entity =>
